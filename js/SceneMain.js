@@ -38,12 +38,12 @@ class SceneMain extends Phaser.Scene {
 
     //  The score
     let score = 0;
-    let scoreText = this.add.text(16, 16, "SCORE: 0", {
+    this.scoreText = this.add.text(16, 16, "SCORE: " + score, {
       fontSize: "32px",
       fill: "#DC143C"
     });
 
-    scoreText;
+    this.scoreText;
 
     this.player = new Player(
       this,
@@ -68,12 +68,23 @@ class SceneMain extends Phaser.Scene {
       }
     }
 
-    this.moveBrick1(this.brick1, 2);
+    this.score += 10;
+
+    this.moveBrick1(this.brick1, 3);
 
     this.time.addEvent({
-      delay: 1500,
+      delay: 1000,
       callback: function() {
-        this.moveBrick2(this.brick2, 2);
+        this.moveBrick2(this.brick2, 3);
+      },
+      callbackScope: this,
+      loop: false
+    });
+
+    this.time.addEvent({
+      delay: 2000,
+      callback: function() {
+        this.moveBrick1(this.brick3, 3);
       },
       callbackScope: this,
       loop: false
@@ -82,16 +93,7 @@ class SceneMain extends Phaser.Scene {
     this.time.addEvent({
       delay: 3000,
       callback: function() {
-        this.moveBrick3(this.brick3, 2);
-      },
-      callbackScope: this,
-      loop: false
-    });
-
-    this.time.addEvent({
-      delay: 4500,
-      callback: function() {
-        this.moveBrick4(this.brick4, 2);
+        this.moveBrick2(this.brick4, 3);
       },
       callbackScope: this,
       loop: false
@@ -99,7 +101,9 @@ class SceneMain extends Phaser.Scene {
 
     this.time.addEvent({
       delay: 2000,
-      callback: function() {},
+      callback: function() {
+        this.increaseScore(this.score);
+      },
       callbackScope: this,
       loop: false
     });
@@ -122,20 +126,6 @@ class SceneMain extends Phaser.Scene {
     }
   }
 
-  moveBrick3(brick, speed) {
-    brick.y += speed;
-    if (brick.y > config.height) {
-      this.resetBrickPosition1(brick);
-    }
-  }
-
-  moveBrick4(brick, speed) {
-    brick.y += speed;
-    if (brick.y > config.height) {
-      this.resetBrickPosition2(brick);
-    }
-  }
-
   //Resets brick's position after it reaches the end of a screen
   resetBrickPosition1(brick) {
     brick.y = 0;
@@ -145,5 +135,9 @@ class SceneMain extends Phaser.Scene {
   resetBrickPosition2(brick) {
     brick.y = 0;
     brick.x = 650;
+  }
+
+  increaseScore(item) {
+    item += 10;
   }
 }
